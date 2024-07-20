@@ -1,17 +1,20 @@
+import javax.naming.InvalidNameException;
+
 public class Usuario {
 
     private String name;
-    private String idade;
+    private int age;
     private String email;
-    private String altura;
+    private String higth;
 
 
-    public Usuario(String name, String idade, String email, String altura) {
+    public Usuario(String name, String email, int age, String higth) {
         this.name = name;
-        this.idade = idade;
+        this.age = age;
         this.email = email;
-        this.altura = altura;
+        this.higth = higth;
     }
+
 
     public String getName() {
         return name;
@@ -21,12 +24,12 @@ public class Usuario {
         this.name = name;
     }
 
-    public String getIdade() {
-        return idade;
+    public int getIdade() {
+        return age;
     }
 
-    public void setIdade(String idade) {
-        this.idade = idade;
+    public void setIdade(int age) {
+        this.age = age;
     }
 
     public String getEmail() {
@@ -38,15 +41,15 @@ public class Usuario {
     }
 
     public String getAltura() {
-        return altura;
+        return higth;
     }
 
     public void setAltura(String altura) {
-        this.altura = altura;
+        this.higth = altura;
     }
 
     @Override
     public String toString() {
-        return name + "\n" + idade + "\n" + email + "\n" + altura + "\n";
+        return name + "\n" + age + "\n" + email + "\n" + higth + "\n";
     }
 }
