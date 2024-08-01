@@ -5,14 +5,14 @@ public class Usuario {
     private String name;
     private int age;
     private String email;
-    private String higth;
+    private String height;
 
 
-    public Usuario(String name, String email, int age, String higth) {
+    public Usuario(String name, String email, int age, String height) {
         this.name = name;
         this.age = age;
         this.email = email;
-        this.higth = higth;
+        this.height = height;
     }
 
 
@@ -41,15 +41,15 @@ public class Usuario {
     }
 
     public String getAltura() {
-        return higth;
+        return height;
     }
 
     public void setAltura(String altura) {
-        this.higth = altura;
+        this.height = altura;
     }
 
     @Override
     public String toString() {
-        return name + "\n" + age + "\n" + email + "\n" + higth + "\n";
+        return name + "\n" + age + "\n" + email + "\n" + height + "\n";
     }
 }
