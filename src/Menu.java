@@ -5,18 +5,23 @@
     import java.nio.file.Paths;
     import java.util.ArrayList;
     import java.util.List;
+    import java.util.Optional;
     import java.util.Scanner;
+    import java.util.stream.Collectors;
 
     import static java.lang.Integer.valueOf;
 
     public class Menu {
         private List<Usuario> usuarios = new ArrayList<>();
         private Scanner scanner = new Scanner(System.in);
-        private static final String FOMULARIO_PATH = "C:/Users/Micro/Desktop/formulario.txt";
+        private static final String FOMULARIO_PATH = "C:/Users/Lenovo/Desktop/formulario.txt";
         private List<String> linhas = new ArrayList<>();
+
+
         public Menu() {
             loadQuestions();
         }
+
         public void showMenu() {
             var opcao = -1;
 
@@ -36,10 +41,10 @@
 
                 switch(opcao) {
                     case 1:
-                        cadastrarUsuario();
+                        registerUser();
                         break;
                     case 2:
-                        listarUsuarios();
+                        listUser();
                         break;
                     case 3:
                         addQuestion();
@@ -74,16 +79,17 @@
 
         }
 
-        private void cadastrarUsuario() {
-            //carregando as perguntas do fomulário
+        private void registerUser() {
+            //Garantindo que as perguntas são as mais atualizadas possíveis
+            loadQuestions();
 
 
-            //Percorrendo o array de perguntas e printando cada uma na tela
             for (String linha : linhas) {
                 System.out.println(linha);
             }
 
             try{
+
                 //Fazendo a validação do nome
                 String name = scanner.nextLine();
                 if(name.length() < 10) {
@@ -123,7 +129,7 @@
 
                 usuarios.add(user);
 
-                File respostFile = new File("C:/Users/Micro/Desktop/" + usuarios.size() + " - " + user.getName().toUpperCase() + ".txt");
+                File respostFile = new File("C:/Users/Lenovo/Desktop/" + usuarios.size() + " - " + user.getName().toUpperCase() + ".txt");
                 try {
                     FileWriter writer = new FileWriter(respostFile);
                     writer.write(user.getName() + "\n");
@@ -139,7 +145,7 @@
             }
         }
 
-        private void listarUsuarios() {
+        private void listUser() {
             if(usuarios.isEmpty()) {
                 System.out.println("Nenhum usuário encontrado");
             }else {
@@ -150,6 +156,7 @@
         }
 
         private void addQuestion() {
+            loadQuestions();
             int nextLineNumber = linhas.size() + 1; // Indica qual o número da próxima pergunta
 
             System.out.println("Digite uma nova pergunta");
@@ -165,16 +172,22 @@
         }
 
         private void removeQuestion() {
-            System.out.println("Digite o numero da pergunta que queira remover");
+            loadQuestions();
+            System.out.println("Perguntas existentes: ");
+            for (String linha : linhas) {
+                System.out.println(linha);
+            }
+
+            System.out.println("\nDigite o número da pergunta que queira remover");
             var questionRemoved = scanner.nextInt();
             scanner.nextLine();
 
             try {
                 if(questionRemoved == 1 || questionRemoved == 2 || questionRemoved == 3 || questionRemoved == 4 ) {
-                    throw new InvalidRemoveQuestions("Não é possível remover as perguntas entre 1 e 4");
+                    throw new InvalidRemoveQuestions("Não é possível remover as perguntas de 1 a 4");
                 }else {
                     linhas.remove(questionRemoved -1 );
-                    linhas.replaceAll(linha -> {
+                    linhas.replaceAll(linha -> { //O replaceAll atualiza todos os dados do array
                         int index = linhas.indexOf(linha); // pega o index de cada pergunta
                         int dashIndex = linha.indexOf("-"); // Pega o index do "-" que é 1
                         return (index + 1) + linha.substring(dashIndex); // Pega a pergunta a partir do index do "-"
@@ -192,12 +205,16 @@
             System.out.println("Busque o usuário pelo trecho ou nome completo, email ou idade");
             var trecho = scanner.nextLine();
 
-            usuarios.stream()
-                    .filter(u -> u.getName().toLowerCase().contains(trecho.toLowerCase()))
-                    .forEach(System.out::println);
+            List<Usuario> foundUser = usuarios.stream()
+                    .filter(u -> u.getName().toLowerCase().contains(trecho.toLowerCase())||
+                            u.getEmail().toLowerCase().contains(trecho.toLowerCase()) ||
+                            String.valueOf(u.getIdade()).contains(trecho))
+                    .collect(Collectors.toList());
+            if(foundUser.isEmpty()) {
+                System.out.println("usuário não encontrado");
+            }else {
+                foundUser.forEach(System.out::println);
+            }
         }
-
-
-
     }
 
